@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { font-family: sans-serif; background: #eee; }
+  .img-container { display: inline-block; margin: 10px; text-align: center; background: white; padding: 10px; border-radius: 5px; }
+  img { max-width: 150px; max-height: 150px; }
+</style>
+</head>
+<body>
+<script>
+  const images = [
+    "Group 1996.png", "Group 2154.png", "Group 2159.png", "Group 2163.png", "Group 2165.png",
+    "Group 2174.png", "Group 2179.png", "Group 2186.png", "Group 2187.png", "Group 2191.png",
+    "Group 2193.png", "Group 2194.png", "Group 2195.png", "Group 2212.png", "Group 2213 (2).png",
+    "Group 2213.png", "Group 2218.png", "Group 2220.png", "Group 2233.png", "Group 2234.png",
+    "Group 2237.png", "Group 2238.png", "Group 2239.png", "Group 2241.png", "Group 2242.png",
+    "Group 2243.png", "Group 2244.png", "Group 2245.png", "Group 2246.png", "Group 2247.png",
+    "Group 2248.png", "Group 2249.png", "Group 2250.png", "Group 2251.png", "Group 2252.png",
+    "Group 2253.png", "Group 2254.png", "Group 2255.png", "Group 2256.png", "Group 2257.png",
+    "Group 2258.png", "Group 2259.png", "Group 2260.png", "Group 2261.png", "Group 2262.png",
+    "Group 2263.png", "Group 2264.png", "Rectangle 880.png", "Rectangle 881.png", "Rectangle 886.png",
+    "Slice 176.png", "花瓣素材_常规装饰系列弥散风渐变上升下降箭头贴纸_194204828 1.png",
+    "花瓣素材_常规装饰系列弥散风渐变上升下降箭头贴纸_194204828 2.png", "花瓣素材_常规装饰系列弥散风渐变上升下降箭头贴纸_194204828 3.png"
+  ];
+  for (const img of images) {
+    document.write(`<div class="img-container">
+      <img src="image/${encodeURIComponent(img)}" /><br/>
+      <small>${img}</small>
+    </div>`);
+  }
+</script>
+</body>
+</html>
