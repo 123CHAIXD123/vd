@@ -8,7 +8,7 @@
       <!-- Decision Tree Area -->
       <div class="tree-area">
         <!-- Connecting paths -->
-        <img src="./image/path_blue.png" class="path-bg" />
+        <img src="./image/Group 2174.png" class="path-bg" />
 
         <!-- Current Filter Option -->
         <div class="filter-node" @click="cycleFilter">
@@ -73,38 +73,43 @@
 
     <!-- Right Panel: Prediction Area -->
     <div class="right-panel">
-      <div class="panel-header">
-        <h2>天气预测区</h2>
-      </div>
-      <div class="panel-content">
-        <div class="option-row">
-          <span class="option-label">是否降水:</span>
-          <div class="toggle-group">
-            <span class="toggle-btn" :class="{ active: predictOptions.isRain === true }" @click="predictOptions.isRain = true">是</span>
-            <span class="toggle-btn" :class="{ active: predictOptions.isRain === false }" @click="predictOptions.isRain = false">否</span>
+      <img src="./image/Rectangle 881.png" class="right-panel-bg" />
+      <div class="right-panel-content">
+        <div class="panel-header">
+          <img src="./image/Group 2243.png" alt="天气预测区" class="panel-title-img" />
+        </div>
+        
+        <div class="panel-body">
+          <div class="option-row">
+            <span class="option-label">是否降水:</span>
+            <div class="toggle-group">
+              <img :src="predictOptions.isRain === true ? './image/Group 2246.png' : './image/Group 2247.png'" class="toggle-img" @click="predictOptions.isRain = true" />
+              <img :src="predictOptions.isRain === false ? './image/Group 2248.png' : './image/Group 2249.png'" class="toggle-img" @click="predictOptions.isRain = false" />
+            </div>
+          </div>
+          <div class="option-row">
+            <span class="option-label">是否有阳光:</span>
+            <div class="toggle-group">
+              <img :src="predictOptions.isSun === true ? './image/Group 2246.png' : './image/Group 2247.png'" class="toggle-img" @click="predictOptions.isSun = true" />
+              <img :src="predictOptions.isSun === false ? './image/Group 2248.png' : './image/Group 2249.png'" class="toggle-img" @click="predictOptions.isSun = false" />
+            </div>
+          </div>
+          <div class="option-row">
+            <span class="option-label">是否零下:</span>
+            <div class="toggle-group">
+              <img :src="predictOptions.isZero === true ? './image/Group 2246.png' : './image/Group 2247.png'" class="toggle-img" @click="predictOptions.isZero = true" />
+              <img :src="predictOptions.isZero === false ? './image/Group 2248.png' : './image/Group 2249.png'" class="toggle-img" @click="predictOptions.isZero = false" />
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="option-row result-row">
+            <span class="option-label">预测结果:</span>
+            <span class="result-text">{{ predictResultText }}</span>
           </div>
         </div>
-        <div class="option-row">
-          <span class="option-label">是否有阳光:</span>
-          <div class="toggle-group">
-            <span class="toggle-btn" :class="{ active: predictOptions.isSun === true }" @click="predictOptions.isSun = true">是</span>
-            <span class="toggle-btn" :class="{ active: predictOptions.isSun === false }" @click="predictOptions.isSun = false">否</span>
-          </div>
+        <div class="panel-footer">
+          <img src="./image/btn_restart_predict.png" class="btn btn-predict" @click="startPrediction" />
         </div>
-        <div class="option-row">
-          <span class="option-label">是否零下:</span>
-          <div class="toggle-group">
-            <span class="toggle-btn" :class="{ active: predictOptions.isZero === true }" @click="predictOptions.isZero = true">是</span>
-            <span class="toggle-btn" :class="{ active: predictOptions.isZero === false }" @click="predictOptions.isZero = false">否</span>
-          </div>
-        </div>
-        <div class="option-row result-row">
-          <span class="option-label">预测结果:</span>
-          <span class="result-text">{{ predictResultText }}</span>
-        </div>
-      </div>
-      <div class="panel-footer">
-        <img src="./image/btn_restart_predict.png" class="btn btn-predict" @click="startPrediction" />
       </div>
     </div>
   </div>
@@ -381,7 +386,8 @@ onMounted(() => {
   display: flex;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(180deg, #b5d8ff 0%, #f4f9ff 100%);
+  background: url('./image/Slice 176.png') no-repeat center center;
+  background-size: cover;
   overflow: hidden;
   font-family: sans-serif;
 }
@@ -396,20 +402,38 @@ onMounted(() => {
 }
 
 .right-panel {
-  width: 320px;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  margin: 20px;
-  padding: 20px;
+  position: relative;
+  width: 440px;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.right-panel-bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  z-index: 1;
+}
+
+.right-panel-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  padding: 80px 40px;
   display: flex;
   flex-direction: column;
-  border: 2px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 8px 32px rgba(0, 100, 255, 0.1);
 }
 
 .top-header {
-  margin-top: 20px;
+  position: absolute;
+  top: 20px;
+  left: 20px;
   z-index: 10;
 }
 
@@ -421,15 +445,15 @@ onMounted(() => {
   position: relative;
   width: 880px;
   height: 640px;
-  margin-top: 20px;
+  margin-top: 100px;
 }
 
 .path-bg {
   position: absolute;
-  top: 140px;
+  top: 160px;
   left: 50%;
   transform: translateX(-50%);
-  width: 600px;
+  width: 800px;
   pointer-events: none;
 }
 
@@ -491,14 +515,19 @@ onMounted(() => {
   width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: flex-end;
   padding: 0 40px;
   margin-top: auto;
   margin-bottom: 20px;
+  z-index: 10;
 }
 
 .center-buttons {
   display: flex;
   gap: 20px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .btn {
@@ -516,17 +545,17 @@ onMounted(() => {
 }
 
 /* Right Panel Styles */
-.panel-header h2 {
-  color: #2b579a;
-  margin: 0 0 20px 0;
-  font-size: 20px;
+.panel-header {
+  margin-bottom: 40px;
+}
+.panel-title-img {
+  width: 200px;
 }
 
-.panel-content {
-  flex: 1;
+.panel-body {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 30px;
 }
 
 .option-row {
@@ -536,9 +565,9 @@ onMounted(() => {
 }
 
 .option-label {
-  color: #333;
+  color: #2b579a;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .toggle-group {
@@ -546,43 +575,47 @@ onMounted(() => {
   gap: 10px;
 }
 
-.toggle-btn {
-  padding: 6px 16px;
-  border-radius: 20px;
-  background: #fff;
-  color: #666;
+.toggle-img {
+  width: 60px;
   cursor: pointer;
-  border: 1px solid #ccc;
-  transition: all 0.2s;
+  transition: transform 0.1s;
+}
+.toggle-img:hover {
+  transform: scale(1.05);
 }
 
-.toggle-btn.active {
-  background: #4a90e2;
-  color: #fff;
-  border-color: #4a90e2;
-  box-shadow: 0 2px 8px rgba(74, 144, 226, 0.4);
+.divider {
+  width: 100%;
+  height: 1px;
+  background-image: linear-gradient(to right, #ccc 50%, transparent 50%);
+  background-size: 10px 1px;
+  margin: 20px 0;
 }
 
 .result-row {
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px dashed rgba(0,0,0,0.1);
+  margin-top: 10px;
 }
 
 .result-text {
   font-size: 24px;
-  color: #e24a4a;
+  color: #4a90e2;
   font-weight: bold;
 }
 
 .panel-footer {
-  margin-top: 20px;
+  margin-top: auto;
   display: flex;
   justify-content: center;
+  padding-bottom: 40px;
 }
 
 .btn-predict {
   width: 200px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.btn-predict:hover {
+  transform: scale(1.05);
 }
 </style>
  
