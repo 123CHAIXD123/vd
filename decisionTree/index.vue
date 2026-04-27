@@ -1,37 +1,37 @@
 <template>
   <div class="decision-tree-container" :style="{ backgroundImage: `url(${ASSETS.pageBg})` }">
-    <!-- Left Panel: Main Tree Area -->
+    <!-- 左侧：决策树主区域 -->
     <div class="left-panel">
-      <!-- Title -->
+      <!-- 页面标题 -->
       <div class="top-header">
         <img :src="ASSETS.pageTitle" alt="天气决策树" class="header-img" />
       </div>
 
-      <!-- Decision Tree Canvas -->
+      <!-- 决策树画布（包含背景框、节点、连线、数据动画） -->
       <div class="tree-area-container">
         <img :src="ASSETS.treeFrameBg" class="tree-area-bg" />
         
         <div class="tree-area" @click="openMenuNodeId = ''">
           
-          <!-- Top Waiting Box -->
+          <!-- 顶部：待分类数据容器 -->
           <div class="waiting-box">
             <img :src="ASSETS.waitingBoxBg" class="waiting-box-bg" />
             <img :src="ASSETS.waitingLabel" class="waiting-badge" />
           </div>
         
-        <!-- Connection Paths (Backgrounds) -->
+        <!-- 连接线背景（用于指引动画滚动轨迹） -->
         <img :src="ASSETS.pathLevel1" class="path-bg path-level-1" />
-        <!-- Re-using smaller paths or scaled paths for lower levels -->
+        <!-- 下层连接线背景（复用同一张图，按位置/层级摆放） -->
         <img :src="ASSETS.pathLevel2" class="path-bg path-level-2 path-left" v-if="treeNodes['node_2_yes']" />
         <img :src="ASSETS.pathLevel2" class="path-bg path-level-2 path-right" v-if="treeNodes['node_2_no']" />
 
-        <!-- Nodes Configuration (Buttons) -->
-        <!-- Level 1 (Root) -->
+        <!-- 节点：筛选依据选择入口（点击弹出下拉菜单） -->
+        <!-- 第 1 层（根节点） -->
         <div class="filter-node node-l1" @click="toggleNodeMenu('root')">
           <img :src="getFilterImage(treeNodes['root'].selectedFilter)" class="filter-img" />
         </div>
 
-        <!-- Level 2 Nodes (Left and Right) -->
+        <!-- 第 2 层（左右两个节点，分别独立选择筛选依据） -->
         <div class="filter-node node-l2 node-l2-left" v-if="treeNodes['node_2_yes'] && treeNodes['root'].status === 'completed'" @click="toggleNodeMenu('node_2_yes')">
           <img :src="getFilterImage(treeNodes['node_2_yes'].selectedFilter)" class="filter-img" />
         </div>
@@ -39,7 +39,7 @@
           <img :src="getFilterImage(treeNodes['node_2_no'].selectedFilter)" class="filter-img" />
         </div>
 
-        <!-- Level 3 Nodes (4 Nodes) -->
+        <!-- 第 3 层（4 个节点，分别独立选择筛选依据） -->
         <div class="filter-node node-l3 node-l3-ll" v-if="treeNodes['node_3_ll'] && treeNodes['node_2_yes'].status === 'completed'" @click="toggleNodeMenu('node_3_ll')">
           <img :src="getFilterImage(treeNodes['node_3_ll'].selectedFilter)" class="filter-img" />
         </div>
@@ -70,8 +70,8 @@
           </div>
         </div>
 
-        <!-- Container Boxes -->
-        <!-- Level 2 Boxes -->
+        <!-- 容器框：用于承载数据图标（每一层的“是/否”分支容器） -->
+        <!-- 第 2 层容器（左右两个大框） -->
         <div class="box-container box-l2-left">
           <img :src="ASSETS.boxYes" class="box-bg" />
           <img :src="ASSETS.badgeYes" class="box-badge" />
@@ -81,7 +81,7 @@
           <img :src="ASSETS.badgeNo" class="box-badge" />
         </div>
 
-        <!-- Level 3 Boxes (Medium) -->
+        <!-- 第 3 层容器（4 个中框） -->
         <div class="box-container box-l3-ll box-medium">
           <img :src="ASSETS.boxYes" class="box-bg" />
           <img :src="ASSETS.badgeYes" class="box-badge" />
@@ -99,7 +99,7 @@
           <img :src="ASSETS.badgeNo" class="box-badge" />
         </div>
 
-        <!-- Level 4 Boxes (Leaves) -->
+        <!-- 第 4 层：8 个叶子结果框（最终落点，显示结果标签） -->
         <div class="box-container box-leaf box-leaf-1">
           <img :src="ASSETS.boxYes" class="box-bg" />
           <img :src="ASSETS.badgeYes" class="box-badge-small" />
@@ -141,7 +141,7 @@
           <img :src="getLeafResultImage('leaf_8')" class="box-result-label" v-if="isTreeCompleted" />
         </div>
 
-          <!-- Data Items (Icons) -->
+          <!-- 12 个待分类数据图标（通过坐标/缩放控制动画） -->
           <div
             v-for="item in items"
             :key="item.id"
@@ -156,7 +156,7 @@
             <img :src="item.img" class="item-icon" />
           </div>
 
-          <!-- Prediction Item (The ? mark) -->
+          <!-- 预测图标（问号，预测时沿着树路径滚动，结束后替换为对应天气图标） -->
           <div
             v-if="predictItem.visible"
             class="data-item predict-item"
@@ -172,7 +172,7 @@
         </div>
       </div>
 
-      <!-- Bottom Controls -->
+      <!-- 底部操作区 -->
       <div class="bottom-controls">
         <img :src="ASSETS.btnRestart" class="btn btn-restart" @click="resetAll" />
         <div class="center-buttons">
@@ -187,7 +187,7 @@
       </div>
     </div>
 
-    <!-- Right Panel: Prediction Area -->
+    <!-- 右侧：天气预测区 -->
     <div class="right-panel">
       <img :src="ASSETS.rightPanelBg" class="right-panel-bg" />
       <div class="right-panel-content">
@@ -227,7 +227,7 @@
           <img :src="ASSETS.btnPredict" class="btn btn-predict" @click="startPrediction" />
         </div>
       </div>
-    <!-- Right Sidebar: Knowledge/Thinking Cards -->
+    <!-- 最右侧：知识卡片/思考问题入口 -->
     <div class="sidebar">
       <img :src="ASSETS.sidebarKnowledge" class="sidebar-card" />
       <img :src="ASSETS.sidebarThinking" class="sidebar-card" />
@@ -239,6 +239,12 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue';
 
+/**
+ * 静态资源映射表
+ * 说明：
+ * - 使用 new URL(..., import.meta.url).href 让 Vite 在构建时能正确处理资源路径
+ * - 模板中尽量通过该映射引用图片，避免相对路径在不同构建模式下失效
+ */
 const ASSETS = {
   pageBg: new URL('./image/Slice 176.png', import.meta.url).href,
   pageTitle: new URL('./image/Rectangle 886.png', import.meta.url).href,
@@ -281,8 +287,17 @@ const ASSETS = {
 };
 
 // ====================
-// 数据定义
+// 数据与枚举定义
 // ====================
+/**
+ * 待分类数据原型（每种天气 3 个，一共 12 个）
+ * 字段说明：
+ * - rain：是否降水
+ * - sun：是否有阳光
+ * - zero：是否零下
+ * - img：展示图标（已映射为可解析的资源 URL）
+ * - type：类型标识（用于调试/辅助）
+ */
 const baseData = [
   { rain: true, sun: false, zero: true, img: ASSETS.iconSnow, type: 'snow' },
   { rain: true, sun: false, zero: false, img: ASSETS.iconRain, type: 'rain' },
@@ -290,16 +305,29 @@ const baseData = [
   { rain: false, sun: false, zero: false, img: ASSETS.iconCloud, type: 'cloud' }
 ];
 
+/**
+ * 12 个数据点的运行态数组
+ * 每一项会在 initData() 中被扩展为：坐标、缩放、是否可见、当前所在容器等信息
+ */
 const items = ref([]);
 
-// 过滤选项及图片映射
+/**
+ * 三种筛选条件的枚举
+ */
 const FILTER_TYPES = ['rain', 'sun', 'zero'];
+
+/**
+ * 筛选条件 -> 节点标签图片
+ */
 const FILTER_IMAGES = {
   rain: ASSETS.filterRain,
   sun: ASSETS.filterSun,
   zero: ASSETS.filterZero
 };
 
+/**
+ * 筛选条件 -> 中文显示文案（用于下拉菜单）
+ */
 const FILTER_TEXT = {
   rain: '是否降水',
   sun: '是否有阳光',
@@ -307,9 +335,15 @@ const FILTER_TEXT = {
 };
 
 // ====================
-// 坐标与布局定义 (相对 .tree-area)
+// 坐标与布局定义（相对决策树区域）
 // ====================
-// 为了贴合设计图，定义一个非常细致的坐标网格
+/**
+ * 布局坐标表（所有坐标均相对于 .tree-area）
+ * 说明：
+ * - root 表示顶部“待分类”容器的中心参考点
+ * - lineX 表示每一层连接线的中点（用于两段式动画的中间点）
+ * - node_xx / leaf_x 表示各层容器/叶子框的中心参考点（用于布局和落点）
+ */
 const POS = {
   root: { x: 500, y: 120 }, // 顶部初始区中心
   line1: { x: 500, y: 220 }, // 第一层连接线中点
@@ -342,9 +376,18 @@ const POS = {
 };
 
 // ====================
-// 树结构状态 (Vue State)
+// 决策树状态（响应式状态）
 // ====================
-// 记录每个节点的状态: id, level, selectedFilter, availableFilters, status ('pending', 'completed'), children
+/**
+ * 决策树节点状态表
+ * 字段说明：
+ * - id / level：节点标识与层级
+ * - selectedFilter：该节点选择的筛选依据（rain/sun/zero）
+ * - availableFilters：该节点可选的筛选依据列表（会排除上层已选的条件）
+ * - status：节点是否已完成分流（pending/completed）
+ * - yesChild/noChild：该节点“是/否”分支指向的下一个节点/叶子
+ * - linePos：该节点连接线中点位置（用于动画的中间点）
+ */
 const treeNodes = reactive({
   root: {
     id: 'root',
@@ -357,10 +400,33 @@ const treeNodes = reactive({
   // 第二层节点将在根节点完成时动态初始化
 });
 
-const currentStage = ref(0); // 0: 在 root, 1: 在 level 2, 2: 在 level 3, 3: completed
+/**
+ * 当前分类执行到的层级
+ * - 0：根节点未分流（数据还在顶部）
+ * - 1：已完成第 1 层分流（数据进入左右大框）
+ * - 2：已完成第 2 层分流（数据进入 4 个中框）
+ * - 3：已完成第 3 层分流（数据进入 8 个叶子框）
+ */
+const currentStage = ref(0); // 0：未分流，1：完成第1层，2：完成第2层，3：完成第3层
+
+/**
+ * 是否正在执行动画
+ * 用于：
+ * - 禁止在动画过程中切换节点筛选条件
+ * - 禁止重复触发“开始分类”
+ */
 const isAnimating = ref(false);
 
+/**
+ * 是否已完成整棵树的三层分类
+ */
 const isTreeCompleted = computed(() => currentStage.value === 3);
+
+/**
+ * “开始分类”按钮是否可用
+ * 规则（与需求一致）：
+ * - 同一层所有可操作节点都选好筛选依据后才允许点击
+ */
 const canStart = computed(() => {
   if (isAnimating.value) return false;
   if (currentStage.value === 0) return !!treeNodes.root?.selectedFilter;
@@ -376,17 +442,35 @@ const canStart = computed(() => {
   return false;
 });
 
+// ====================
 // 预测区状态
+// ====================
+/**
+ * 右侧预测面板选择的条件值
+ * 说明：预测时将读取该对象，并沿决策树路径滚动“？”图标
+ */
 const predictOptions = reactive({
   rain: true,
   sun: false,
   zero: false
 });
+
+/**
+ * 右侧展示的预测结果文本
+ */
 const predictResultText = ref('');
+
+/**
+ * 预测用的动态图标（默认问号，结束后替换为对应天气图标）
+ */
 const predictItem = reactive({
   x: POS.root.x, y: POS.root.y, scale: 1, visible: false, img: ASSETS.iconQuestion
 });
 
+/**
+ * 当前处于展开状态的节点下拉菜单对应的节点 ID
+ * - 为空：表示没有任何节点菜单展开
+ */
 const openMenuNodeId = ref('');
 
 /**
@@ -396,6 +480,14 @@ const openMenuNodeId = ref('');
  */
 const getFilterText = (filter) => FILTER_TEXT[filter] || '';
 
+/**
+ * 获取某个节点“下拉菜单”当前可选项（文字模式）
+ * 规则：
+ * - 菜单项 = 当前已选项 + 可选项（去重）
+ * - 如果只有 1 个可选项，则不弹出菜单
+ * @param {string} nodeId 节点ID
+ * @returns {string[]} 可选的筛选条件 key 列表
+ */
 const getNodeMenuOptions = (nodeId) => {
   const node = treeNodes[nodeId];
   if (!node) return [];
@@ -436,6 +528,12 @@ const selectNodeFilter = (nodeId, filter) => {
   openMenuNodeId.value = '';
 };
 
+/**
+ * 获取下拉菜单的显示位置
+ * 说明：菜单默认显示在节点的下方
+ * @param {string} nodeId 节点ID
+ * @returns {Record<string, string>} 用于绑定到 style 的定位对象
+ */
 const getNodeMenuStyle = (nodeId) => {
   const pos = POS[nodeId];
   if (!pos) return {};
@@ -445,6 +543,12 @@ const getNodeMenuStyle = (nodeId) => {
   };
 };
 
+/**
+ * 计算某个节点所在“路径”已使用的筛选条件
+ * 目的：保证“上层选择过的筛选依据，下层不再出现该筛选依据”
+ * @param {string} nodeId 节点ID
+ * @returns {string[]} 已使用的筛选条件 key 列表
+ */
 const getUsedFiltersForNode = (nodeId) => {
   if (nodeId === 'root') return [];
   if (nodeId === 'node_2_yes' || nodeId === 'node_2_no') return [treeNodes.root.selectedFilter].filter(Boolean);
@@ -457,8 +561,15 @@ const getUsedFiltersForNode = (nodeId) => {
 
 
 // ====================
-// 核心逻辑函数
-
+// 数据初始化与通用工具函数
+// ====================
+/**
+ * 初始化 12 个待分类数据点
+ * 行为：
+ * - 生成 12 个数据点（每种天气 3 个）
+ * - 随机打乱顺序，模拟“待分类”区的随机排列
+ * - 将数据点布局到顶部“待分类”容器
+ */
 const initData = () => {
   items.value = [];
   let id = 1;
@@ -472,7 +583,14 @@ const initData = () => {
   layoutItemsInNode('root', items.value);
 };
 
-// 在指定的框内网格布局排布图标
+/**
+ * 在指定节点容器内，将若干数据点按网格方式排布
+ * 说明：
+ * - 本项目使用“固定坐标 + 网格排布”方案，保证动画结束后能稳定落在框内
+ * - 同一个节点内的数据越多，网格会自动扩展行列
+ * @param {string} nodeId 目标节点/容器 ID
+ * @param {Array} itemArray 要布局的数据点数组
+ */
 const layoutItemsInNode = (nodeId, itemArray) => {
   if (!itemArray.length) return;
   const center = POS[nodeId];
@@ -493,15 +611,36 @@ const layoutItemsInNode = (nodeId, itemArray) => {
   });
 };
 
+/**
+ * 根据筛选条件返回节点标签图片
+ * @param {string} filter 筛选条件 key（rain/sun/zero）
+ * @returns {string} 图片资源 URL
+ */
 const getFilterImage = (filter) => {
   return FILTER_IMAGES[filter] || ASSETS.waitingLabel;
 };
 
-// 判定数据是否符合节点的条件
+/**
+ * 判断某个数据点是否满足指定筛选条件（用于是/否分流）
+ * @param {Object} data 数据点（包含 rain/sun/zero）
+ * @param {string} filterType 筛选条件 key（rain/sun/zero）
+ * @returns {boolean} 是否满足条件
+ */
 const checkCondition = (data, filterType) => {
-  return data[filterType]; // data.rain, data.sun, data.zero
+  return !!data[filterType]; // 对应数据上的三个布尔字段
 };
 
+/**
+ * 根据（降水、阳光、零下）三要素推断天气类型
+ * 真值表规则：
+ * - 降水=是 且 阳光=是 -> 无
+ * - 降水=是 且 阳光=否 且 零下=是 -> 雪
+ * - 降水=是 且 阳光=否 且 零下=否 -> 雨
+ * - 降水=否 且 阳光=是 -> 晴（忽略零下）
+ * - 降水=否 且 阳光=否 -> 阴（忽略零下）
+ * @param {{rain:boolean, sun:boolean, zero:boolean}} attrs 三个条件值
+ * @returns {'none'|'snow'|'rain'|'sun'|'cloud'} 天气类型
+ */
 const resolveWeatherType = (attrs) => {
   const { rain, sun, zero } = attrs;
   if (rain && sun) return 'none';
@@ -511,6 +650,11 @@ const resolveWeatherType = (attrs) => {
   return 'cloud';
 };
 
+/**
+ * 将天气类型映射为底部叶子框“结果标签”图片
+ * @param {'none'|'snow'|'rain'|'sun'|'cloud'} type 天气类型
+ * @returns {string} 图片资源 URL
+ */
 const resolveWeatherImage = (type) => {
   if (type === 'none') return ASSETS.resultNone;
   if (type === 'snow') return ASSETS.resultSnow;
@@ -532,6 +676,14 @@ const resolveWeatherPredictIcon = (type) => {
   return ASSETS.iconCloud;
 };
 
+/**
+ * 获取某个叶子框对应的“路径定义”
+ * 说明：
+ * - 每个叶子框都对应一条从根节点开始的三层路径
+ * - 路径项格式：[nodeId, branchYes]，branchYes 表示在该节点走“是(true)”还是“否(false)”分支
+ * @param {string} leafId 叶子框 ID（leaf_1 ~ leaf_8）
+ * @returns {Array<[string, boolean]>} 路径数组
+ */
 const getLeafPath = (leafId) => {
   const paths = {
     leaf_1: [['root', true], ['node_2_yes', true], ['node_3_ll', true]],
@@ -546,6 +698,14 @@ const getLeafPath = (leafId) => {
   return paths[leafId] || [];
 };
 
+/**
+ * 根据叶子框路径，反推该叶子框对应的（降水/阳光/零下）三要素取值
+ * 说明：
+ * - 叶子框的路径只描述“每层走是/否”，并不固定哪个条件在哪一层
+ * - 因此需要读取每个节点当前选择的筛选依据（selectedFilter），再把是/否映射到对应条件上
+ * @param {string} leafId 叶子框 ID
+ * @returns {{rain:boolean, sun:boolean, zero:boolean}} 三要素值
+ */
 const getLeafAttrs = (leafId) => {
   const attrs = { rain: false, sun: false, zero: false };
   const path = getLeafPath(leafId);
@@ -557,7 +717,12 @@ const getLeafAttrs = (leafId) => {
   return attrs;
 };
 
-// 动态计算叶子节点的结果图片
+/**
+ * 计算叶子框的“结果标签图片”
+ * 说明：通过叶子框的路径 -> 三要素 -> 真值表 -> 标签图片 的链路得到最终结果
+ * @param {string} leafId 叶子框 ID
+ * @returns {string} 结果标签图片 URL
+ */
 const getLeafResultImage = (leafId) => {
   const attrs = getLeafAttrs(leafId);
   return resolveWeatherImage(resolveWeatherType(attrs));
@@ -567,6 +732,12 @@ const getLeafResultImage = (leafId) => {
 // 分类与动画执行
 // ====================
 
+/**
+ * 点击“开始分类”
+ * 规则：
+ * - 当前层所有可操作节点选择完成后才能触发（由 canStart 控制）
+ * - 每次点击推进一层分类：第 1 层 -> 第 2 层 -> 第 3 层
+ */
 const startClassification = () => {
   if (!canStart.value || isTreeCompleted.value) return;
   
@@ -579,6 +750,12 @@ const startClassification = () => {
   }
 };
 
+/**
+ * 执行第 1 层分流（根节点 -> 左右两个大框）
+ * 动画：
+ * 1) 顶部待分类数据滚动到连接线中点并缩小
+ * 2) 再滚动到左右大框并放大
+ */
 const executeLevel1 = () => {
   isAnimating.value = true;
   const root = treeNodes['root'];
@@ -627,6 +804,10 @@ const executeLevel1 = () => {
   }, 1000);
 };
 
+/**
+ * 执行第 2 层分流（两个大框 -> 4 个中框）
+ * 说明：左右两个节点分别使用各自选择的筛选依据，互不影响
+ */
 const executeLevel2 = () => {
   isAnimating.value = true;
   const nodeYes = treeNodes['node_2_yes'];
@@ -691,6 +872,10 @@ const executeLevel2 = () => {
   }, 1000);
 };
 
+/**
+ * 执行第 3 层分流（4 个中框 -> 8 个叶子框）
+ * 说明：四个节点分别独立使用各自的筛选依据，把数据分配到最终落点
+ */
 const executeLevel3 = () => {
   isAnimating.value = true;
   
@@ -728,6 +913,13 @@ const executeLevel3 = () => {
 };
 
 
+/**
+ * 重置：回到初始状态
+ * 行为：
+ * - 清空第 2/3 层节点状态，仅保留根节点
+ * - 清空预测图标和预测结果
+ * - 重新生成并排列 12 个待分类数据
+ */
 const resetAll = () => {
   if (isAnimating.value) return;
   // 重置状态
@@ -751,8 +943,13 @@ const resetAll = () => {
   initData();
 };
 
+/**
+ * 上一步
+ * 说明：
+ * - 当前实现采用“直接重置”策略，以避免多层回退的状态还原复杂度
+ * - 如果后续需要精确回退到上一层，可在此处扩展为“回退到 currentStage-1”并回收/重排数据
+ */
 const goBack = () => {
-  // 为了简化，这里不支持退回上一步，仅支持完全重置
   resetAll();
 };
 
@@ -761,8 +958,17 @@ const goBack = () => {
 // 右侧预测功能
 // ====================
 
+/**
+ * 简单的延时工具（用于串联动画步骤）
+ * @param {number} ms 毫秒
+ * @returns {Promise<void>} Promise
+ */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+/**
+ * 根据右侧面板选择值，计算预测最终会落在哪一个叶子框
+ * @returns {string} 叶子框 ID（leaf_1 ~ leaf_8）
+ */
 const getPredictionLeafId = () => {
   const root = treeNodes.root;
   const rootYes = checkCondition(predictOptions, root.selectedFilter);
@@ -775,6 +981,11 @@ const getPredictionLeafId = () => {
   return node3Yes ? node3.yesChild : node3.noChild;
 };
 
+/**
+ * 让预测图标穿过某一个节点（执行“上->线->下”的两段式动画）
+ * @param {string} nodeId 节点ID（root / node_2_x / node_3_x）
+ * @returns {Promise<string>} 下一个节点/叶子ID
+ */
 const animatePredictThroughNode = async (nodeId) => {
   const node = treeNodes[nodeId];
   if (!node) return nodeId;
@@ -795,6 +1006,12 @@ const animatePredictThroughNode = async (nodeId) => {
   return nextNodeId;
 };
 
+/**
+ * 触发预测
+ * 规则：
+ * - 只有在整棵树分类完成后才能预测（确保路径完整、节点均有筛选依据）
+ * - 预测图标从顶部出发，依次穿过 3 层节点，到达叶子框后替换为对应天气图标
+ */
 const startPrediction = () => {
   if (!isTreeCompleted.value) {
     alert("请先完成左侧决策树的完整分类");
@@ -824,6 +1041,9 @@ const startPrediction = () => {
   })();
 };
 
+/**
+ * 组件挂载后初始化待分类数据
+ */
 onMounted(() => {
   initData();
 });
