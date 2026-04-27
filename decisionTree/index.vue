@@ -4,11 +4,20 @@
     <div class="left-panel">
       <!-- Title -->
       <div class="top-header">
-        <img src="./image/label_waiting.png" alt="等待分类" class="header-img" />
+        <img src="./image/Rectangle 886.png" alt="天气决策树" class="header-img" />
       </div>
 
       <!-- Decision Tree Canvas -->
-      <div class="tree-area">
+      <div class="tree-area-container">
+        <img src="./image/Rectangle 880.png" class="tree-area-bg" />
+        
+        <div class="tree-area">
+          
+          <!-- Top Waiting Box -->
+          <div class="waiting-box">
+            <img src="./image/Group 2186.png" class="waiting-box-bg" />
+            <img src="./image/label_waiting.png" class="waiting-badge" />
+          </div>
         
         <!-- Connection Paths (Backgrounds) -->
         <img src="./image/Group 2174.png" class="path-bg path-level-1" />
@@ -116,33 +125,34 @@
           <img :src="getLeafResultImage('leaf_8')" class="box-result-label" v-if="isTreeCompleted" />
         </div>
 
-        <!-- Data Items (Icons) -->
-        <div
-          v-for="item in items"
-          :key="item.id"
-          class="data-item"
-          :style="{
-            left: `${item.x}px`,
-            top: `${item.y}px`,
-            transform: `translate(-50%, -50%) scale(${item.scale})`,
-            opacity: item.visible ? 1 : 0
-          }"
-        >
-          <img :src="`./image/${item.img}`" class="item-icon" />
-        </div>
+          <!-- Data Items (Icons) -->
+          <div
+            v-for="item in items"
+            :key="item.id"
+            class="data-item"
+            :style="{
+              left: `${item.x}px`,
+              top: `${item.y}px`,
+              transform: `translate(-50%, -50%) scale(${item.scale})`,
+              opacity: item.visible ? 1 : 0
+            }"
+          >
+            <img :src="`./image/${item.img}`" class="item-icon" />
+          </div>
 
-        <!-- Prediction Item (The ? mark) -->
-        <div
-          v-if="predictItem.visible"
-          class="data-item predict-item"
-          :style="{
-            left: `${predictItem.x}px`,
-            top: `${predictItem.y}px`,
-            transform: `translate(-50%, -50%) scale(${predictItem.scale})`,
-            zIndex: 100
-          }"
-        >
-          <img :src="`./image/${predictItem.img}`" class="item-icon" />
+          <!-- Prediction Item (The ? mark) -->
+          <div
+            v-if="predictItem.visible"
+            class="data-item predict-item"
+            :style="{
+              left: `${predictItem.x}px`,
+              top: `${predictItem.y}px`,
+              transform: `translate(-50%, -50%) scale(${predictItem.scale})`,
+              zIndex: 100
+            }"
+          >
+            <img :src="`./image/${predictItem.img}`" class="item-icon" />
+          </div>
         </div>
       </div>
 
@@ -170,21 +180,21 @@
         
         <div class="panel-body">
           <div class="option-row">
-            <span class="option-label">是否降水:</span>
+            <span class="option-label"><img src="./image/Group 2251.png" class="option-label-icon" />是否降水:</span>
             <div class="toggle-group">
               <img :src="predictOptions.rain === true ? './image/Group 2246.png' : './image/Group 2247.png'" class="toggle-img" @click="predictOptions.rain = true" />
               <img :src="predictOptions.rain === false ? './image/Group 2248.png' : './image/Group 2249.png'" class="toggle-img" @click="predictOptions.rain = false" />
             </div>
           </div>
           <div class="option-row">
-            <span class="option-label">是否有阳光:</span>
+            <span class="option-label"><img src="./image/Group 2251.png" class="option-label-icon" />是否有阳光:</span>
             <div class="toggle-group">
               <img :src="predictOptions.sun === true ? './image/Group 2246.png' : './image/Group 2247.png'" class="toggle-img" @click="predictOptions.sun = true" />
               <img :src="predictOptions.sun === false ? './image/Group 2248.png' : './image/Group 2249.png'" class="toggle-img" @click="predictOptions.sun = false" />
             </div>
           </div>
           <div class="option-row">
-            <span class="option-label">是否零下:</span>
+            <span class="option-label"><img src="./image/Group 2251.png" class="option-label-icon" />是否零下:</span>
             <div class="toggle-group">
               <img :src="predictOptions.zero === true ? './image/Group 2246.png' : './image/Group 2247.png'" class="toggle-img" @click="predictOptions.zero = true" />
               <img :src="predictOptions.zero === false ? './image/Group 2248.png' : './image/Group 2249.png'" class="toggle-img" @click="predictOptions.zero = false" />
@@ -192,7 +202,7 @@
           </div>
           <div class="divider"></div>
           <div class="option-row result-row">
-            <span class="option-label">预测结果:</span>
+            <span class="option-label"><img src="./image/Group 2251.png" class="option-label-icon" />预测结果:</span>
             <span class="result-text">{{ predictResultText }}</span>
           </div>
         </div>
@@ -200,7 +210,12 @@
           <img src="./image/btn_restart_predict.png" class="btn btn-predict" @click="startPrediction" />
         </div>
       </div>
+    <!-- Right Sidebar: Knowledge/Thinking Cards -->
+    <div class="sidebar">
+      <img src="./image/Group 2241.png" class="sidebar-card" />
+      <img src="./image/Group 2242.png" class="sidebar-card" />
     </div>
+
   </div>
 </template>
 
@@ -233,34 +248,34 @@ const FILTER_IMAGES = {
 // ====================
 // 为了贴合设计图，定义一个非常细致的坐标网格
 const POS = {
-  root: { x: 500, y: 50 }, // 顶部初始区中心
-  line1: { x: 500, y: 150 }, // 第一层连接线中点
+  root: { x: 500, y: 120 }, // 顶部初始区中心
+  line1: { x: 500, y: 220 }, // 第一层连接线中点
   
-  node_2_yes: { x: 260, y: 250 }, // 第二层左大框中心
-  node_2_no: { x: 740, y: 250 }, // 第二层右大框中心
+  node_2_yes: { x: 260, y: 320 }, // 第二层左大框中心
+  node_2_no: { x: 740, y: 320 }, // 第二层右大框中心
   
-  line2_l: { x: 260, y: 350 }, // 左侧大框下连线中点
-  line2_r: { x: 740, y: 350 }, // 右侧大框下连线中点
+  line2_l: { x: 260, y: 440 }, // 左侧大框下连线中点
+  line2_r: { x: 740, y: 440 }, // 右侧大框下连线中点
 
-  node_3_ll: { x: 140, y: 430 }, // 第三层 左-左中框中心
-  node_3_lr: { x: 380, y: 430 }, // 第三层 左-右中框中心
-  node_3_rl: { x: 620, y: 430 }, // 第三层 右-左中框中心
-  node_3_rr: { x: 860, y: 430 }, // 第三层 右-右中框中心
+  node_3_ll: { x: 140, y: 520 }, // 第三层 左-左中框中心
+  node_3_lr: { x: 380, y: 520 }, // 第三层 左-右中框中心
+  node_3_rl: { x: 620, y: 520 }, // 第三层 右-左中框中心
+  node_3_rr: { x: 860, y: 520 }, // 第三层 右-右中框中心
 
-  line3_ll: { x: 140, y: 500 },
-  line3_lr: { x: 380, y: 500 },
-  line3_rl: { x: 620, y: 500 },
-  line3_rr: { x: 860, y: 500 },
+  line3_ll: { x: 140, y: 600 },
+  line3_lr: { x: 380, y: 600 },
+  line3_rl: { x: 620, y: 600 },
+  line3_rr: { x: 860, y: 600 },
 
   // 最终的 8 个叶子框坐标
-  leaf_1: { x: 80, y: 570 },
-  leaf_2: { x: 200, y: 570 },
-  leaf_3: { x: 320, y: 570 },
-  leaf_4: { x: 440, y: 570 },
-  leaf_5: { x: 560, y: 570 },
-  leaf_6: { x: 680, y: 570 },
-  leaf_7: { x: 800, y: 570 },
-  leaf_8: { x: 920, y: 570 },
+  leaf_1: { x: 80, y: 680 },
+  leaf_2: { x: 200, y: 680 },
+  leaf_3: { x: 320, y: 680 },
+  leaf_4: { x: 440, y: 680 },
+  leaf_5: { x: 560, y: 680 },
+  leaf_6: { x: 680, y: 680 },
+  leaf_7: { x: 800, y: 680 },
+  leaf_8: { x: 920, y: 680 },
 };
 
 // ====================
@@ -649,6 +664,52 @@ onMounted(() => {
   padding: 20px;
 }
 
+.tree-area-container {
+  position: relative;
+  width: 1340px;
+  height: 774px;
+  margin-top: 40px;
+}
+
+.tree-area-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  z-index: 1;
+}
+
+.tree-area {
+  position: relative;
+  z-index: 2;
+  width: 1000px;
+  height: 700px;
+  margin: 0 auto;
+}
+
+.waiting-box {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 500px;
+  display: flex;
+  justify-content: center;
+  z-index: 20;
+}
+
+.waiting-box-bg {
+  width: 100%;
+}
+
+.waiting-badge {
+  position: absolute;
+  top: -20px;
+  width: 160px;
+}
+
 .right-panel {
   position: relative;
   width: 440px;
@@ -656,6 +717,27 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.sidebar {
+  width: 100px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding-right: 20px;
+  z-index: 10;
+}
+
+.sidebar-card {
+  width: 60px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.sidebar-card:hover {
+  transform: scale(1.05);
 }
 
 .right-panel-bg {
@@ -686,14 +768,7 @@ onMounted(() => {
 }
 
 .header-img {
-  width: 180px;
-}
-
-.tree-area {
-  position: relative;
-  width: 1000px;
-  height: 700px;
-  margin-top: 40px;
+  width: 260px;
 }
 
 /* Background Paths */
@@ -702,10 +777,10 @@ onMounted(() => {
   pointer-events: none;
 }
 .path-level-1 {
-  top: 100px; left: 500px; transform: translateX(-50%); width: 520px;
+  top: 170px; left: 500px; transform: translateX(-50%); width: 520px;
 }
 .path-level-2 {
-  top: 300px; width: 260px;
+  top: 370px; width: 260px;
 }
 .path-left {
   left: 260px; transform: translateX(-50%);
@@ -729,12 +804,12 @@ onMounted(() => {
   width: 160px;
   filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
 }
-.node-l1 { top: 80px; left: 500px; }
-.node-l2-left { top: 280px; left: 260px; }
-.node-l2-right { top: 280px; left: 740px; }
+.node-l1 { top: 150px; left: 500px; }
+.node-l2-left { top: 350px; left: 260px; }
+.node-l2-right { top: 350px; left: 740px; }
 
 .node-l3 {
-  top: 450px;
+  top: 520px;
   transform: translateX(-50%) scale(0.8);
 }
 .node-l3:hover {
@@ -769,18 +844,18 @@ onMounted(() => {
 }
 
 /* Level 2 Boxes */
-.box-l2-left { top: 190px; left: 260px; width: 440px; }
-.box-l2-right { top: 190px; left: 740px; width: 440px; }
+.box-l2-left { top: 260px; left: 260px; width: 440px; }
+.box-l2-right { top: 260px; left: 740px; width: 440px; }
 
 /* Level 3 Boxes (Medium) */
-.box-medium { width: 220px; top: 370px; }
+.box-medium { width: 220px; top: 440px; }
 .box-l3-ll { left: 140px; }
 .box-l3-lr { left: 380px; }
 .box-l3-rl { left: 620px; }
 .box-l3-rr { left: 860px; }
 
 /* Level 4 Boxes (Leaves) */
-.box-leaf { width: 100px; top: 520px; }
+.box-leaf { width: 100px; top: 590px; }
 .box-leaf-1 { left: 80px; }
 .box-leaf-2 { left: 200px; }
 .box-leaf-3 { left: 320px; }
@@ -811,13 +886,13 @@ onMounted(() => {
 }
 
 .bottom-controls {
+  position: absolute;
+  bottom: 20px;
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   padding: 0 40px;
-  margin-top: auto;
-  margin-bottom: 20px;
   z-index: 50;
 }
 
@@ -864,9 +939,15 @@ onMounted(() => {
 }
 
 .option-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   color: #2b579a;
   font-weight: bold;
   font-size: 18px;
+}
+.option-label-icon {
+  width: 20px;
 }
 
 .toggle-group {
