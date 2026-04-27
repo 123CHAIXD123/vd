@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { background: #333; color: #fff; font-family: sans-serif; }
+  .img-container { display: inline-block; margin: 10px; text-align: center; background: #555; padding: 10px; border-radius: 5px; }
+  img { max-width: 200px; max-height: 200px; }
+</style>
+</head>
+<body>
+<script>
+  const images = [
+    "Rectangle 880.png", "Rectangle 881.png", "Rectangle 886.png", "Slice 176.png",
+    "Group 2174.png", "Group 2212.png"
+  ];
+  for (const img of images) {
+    document.write(`<div class="img-container">
+      <img src="image/${encodeURIComponent(img)}" /><br/>
+      <small>${img}</small>
+    </div>`);
+  }
+</script>
+</body>
+</html>
